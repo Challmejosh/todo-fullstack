@@ -13,7 +13,7 @@ export interface Todo {
 }
 
 export default function TodoApp({ todos }: { todos: Todo[] }) {
-  const url = "http://localhost:3000";
+  const url = String(process.env.NEXT_PUBLIC_URL)
   const [inputValue, setInputValue] = useState<string>("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState<string>("");
@@ -22,7 +22,7 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
 
   /** 🔹 Fetch Todos */
   const fetchTodos = async () => {
-    const allTodos = await fetch(`/api/todos`);
+    const allTodos = await fetch(`${url}/api/todos`);
     if (!allTodos.ok) throw new Error("failed to fetch");
     return allTodos.json();
   };

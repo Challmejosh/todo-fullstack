@@ -12,7 +12,8 @@ export const getServerSideProps: GetServerSideProps<{ todo: TodoType | null }> =
 ) => {
   try {
     const { id } = context.params as { id: string }; 
-    const res = await fetch(`http://localhost:3000/api/todos/${id}`);
+    const url = String(process.env.NEXT_PUBLIC_URL)
+    const res = await fetch(`${url}/api/todos/${id}`);
 
     if (!res.ok) {
       throw new Error("Failed to fetch todo");

@@ -68,7 +68,6 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
       queryClient.setQueryData<Todo[]>(["todos"], (old) =>
         old?.map((todo) => (todo.id === data.id ? data : todo)) || []
     );
-    console.log(data)
       await queryClient.cancelQueries({ queryKey: ["todos"] });
 
       const prevTodos = queryClient.getQueryData<Todo[]>(["todos"]) || [];
@@ -167,15 +166,15 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
     <div className="min-h-dvh h-full bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
       <div className="max-w-2xl mx-auto pt-8">
         {/* header */}
-        <div className="text-center mb-8">
+        {todos.length>0&&<div className="text-center mb-8">
           <h1 className="text-4xl font-bold capitalize text-white mb-2 tracking-tight">
             todos
           </h1>
           <p className="text-purple-200 text-lg">get things done, no cap</p>
-        </div>
+        </div>}
 
         {/* stats */}
-        <div className="bg-white/10 rounded-2xl p-4 mb-6 border border-white/20">
+        {todos.length>0&&<div className="bg-white/10 rounded-2xl p-4 mb-6 border border-white/20">
           <div className="flex justify-between text-center">
             <div>
               <div className="text-2xl font-bold text-white">
@@ -196,7 +195,7 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
               <div className="text-purple-200 text-sm">remaining</div>
             </div>
           </div>
-        </div>
+        </div>}
 
         {/* add input */}
         <div className="bg-white/10 rounded-2xl p-6 mb-6 border border-white/20">

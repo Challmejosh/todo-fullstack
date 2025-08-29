@@ -22,8 +22,8 @@ export default async function handler(req: NextApiRequest, res:NextApiResponse) 
         return res.status(500).json({ error: error.message });
       }
       return res.status(201).json(data);
-    } catch (err:any) {
-      return res.status(500).json({ error: err.message || err });
+    } catch (err) {
+      return res.status(500).json({ error: err });
     }
   } else {
     res.setHeader("Allow", ["GET", "POST"]);

@@ -1,4 +1,5 @@
 import EachTodo from "@/components/oneTodo";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 interface TodoType {
   id: number;
@@ -6,23 +7,25 @@ interface TodoType {
   completed: boolean;
 }
 
-// ✅ Use context.params to access [id]
-export async function getServerSideProps(context: any) {
+export const getServerSideProps: GetServerSideProps<{ todo: TodoType | null }> = async (
+  context: GetServerSidePropsContext
+) => {
   try {
-    const { id } = context.params; // 👈 comes from the dynamic route [id].tsx
+    const { id } = context.params as { id: string }; 
     const res = await fetch(`http://localhost:3000/api/todos/${id}`);
+
     if (!res.ok) {
       throw new Error("Failed to fetch todo");
     }
 
-    const todo = await res.json();
+    const todo: TodoType = await res.json();
 
     return { props: { todo } };
   } catch (error) {
     console.error("Error in getServerSideProps:", error);
     return { props: { todo: null } }; // fallback
   }
-}
+};
 
 const Todo = ({ todo }: { todo: TodoType | null }) => {
   if (!todo) {

@@ -68,6 +68,7 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
       queryClient.setQueryData<Todo[]>(["todos"], (old) =>
         old?.map((todo) => (todo.id === data.id ? data : todo)) || []
     );
+    console.log(data)
       await queryClient.cancelQueries({ queryKey: ["todos"] });
 
       const prevTodos = queryClient.getQueryData<Todo[]>(["todos"]) || [];
@@ -106,17 +107,10 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
       queryClient.setQueryData(["todos"], context?.prevTodos);
       toast.error("Failed to update todo");
     },
-    onSuccess: async (data) => {
-      await queryClient.cancelQueries({ queryKey: ["todos"] });
-
-      const prevTodos = queryClient.getQueryData<Todo[]>(["todos"]);
-      queryClient.setQueryData<Todo[]>(["todos"], (old) =>
-        old?.map((t) => (t.id === data.id ? data : t)) || []
-      );
+    onSuccess: () => {
       toast.success("Todo updated successfully");
       setEditingId(null);
       setEditingText("");
-      return { prevTodos }
     },
   });
 

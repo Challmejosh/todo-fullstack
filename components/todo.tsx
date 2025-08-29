@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Edit2, Plus, Trash2, X } from "lucide-react";
+import { Check, Edit2, Plus, ShoppingBasket, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -208,6 +208,7 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
               placeholder="what needs to be done? 💭"
               className="flex-1 bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-white"
               disabled={isAdding}
+              id="input"
             />
             <button
               onClick={addTodo}
@@ -221,10 +222,40 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
 
         {/* list */}
         <div className="space-y-3">
-          {isLoading ? (
-            <p className="text-purple-200">Loading...</p>
-          ) : todosData.length === 0 ? (
-            <p className="text-purple-200">no todos yet!</p>
+          {isLoading ?(
+              Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="animate-pulse bg-white/10 rounded-xl p-4 border border-white/20"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-white/20" />
+                      <div className="flex-1 h-4 bg-white/20 rounded" />
+                      <div className="flex gap-2">
+                        <div className="w-8 h-4 bg-white/20 rounded" />
+                        <div className="w-8 h-4 bg-white/20 rounded" />
+                        <div className="w-12 h-4 bg-white/20 rounded" />
+                      </div>
+                    </div>
+                  </div>
+              ))) : todosData.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-white/10 border border-white/20 mb-4">
+                    <ShoppingBasket color="#fff" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-white mb-2">
+                    No todos yet 🎉
+                  </h2>
+                  <p className="text-white/60 mb-6">
+                    Looks like you’re all caught up. Add a new task to get started!
+                  </p>
+                  <label
+                  htmlFor="input"
+                    className="px-4 py-2 cursor-pointer bg-purple-500 hover:bg-purple-600 text-white rounded-lg shadow-md"
+                  >
+                    + Add your first todo
+                  </label>
+                </div>
           ) : (
             todosData.map((todo:Todo) => (
               <div

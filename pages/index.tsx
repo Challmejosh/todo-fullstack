@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import TodoApp from "@/components/todo";
+import { toast } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,6 +20,7 @@ export async function getServerSideProps() {
   try {
     const res = await fetch(`http://localhost:3000/api/todos`);
     if (!res.ok) {
+      toast.error("Connection Failed Try again")
       throw new Error("Failed to fetch todos");
     }
     const todos = await res.json();

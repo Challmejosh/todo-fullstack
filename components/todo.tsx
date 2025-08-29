@@ -30,7 +30,7 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
   const {
     data: todosData = todos,
     isLoading,
-    error,
+    // error,
   } = useQuery({
     queryKey: ["todos"],
     queryFn: fetchTodos,

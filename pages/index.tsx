@@ -18,7 +18,8 @@ export interface Todo {
 }
 export async function getServerSideProps() {
   try {
-    const res = await fetch(`http://localhost:3000/api/todos`);
+    const url = String(process.env.NEXT_PUBLIC_URL)
+    const res = await fetch(`${url}/api/todos`);
     if (!res.ok) {
       toast.error("Connection Failed Try again")
       throw new Error("Failed to fetch todos");

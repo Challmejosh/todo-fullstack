@@ -34,7 +34,7 @@ export async function getServerSideProps() {
 export default function Home({ todos }: { todos: Todo[] }) {
   return (
       <div
-        className={`${geistSans.className} ${geistMono.className} font-sans min-h-screen `}
+        className={`${geistSans.className} ${geistMono.className} font-sans  `}
       >
       <TodoApp todos={todos} />
       </div>

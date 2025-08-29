@@ -51,21 +51,12 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
 
   const { mutate: addMutate, isPending: isAdding } = useMutation({
     mutationFn: addFetch,
-    onMutate: async (newTodo) => {
+    onMutate: async () => {
+      
       await queryClient.cancelQueries({ queryKey: ["todos"] });
 
       const prevTodos = queryClient.getQueryData<Todo[]>(["todos"]) || [];
-
-      const optimisticTodo: Todo = {
-        id: Date.now(), // temp id
-        ...newTodo,
-      };
-
-      queryClient.setQueryData<Todo[]>(["todos"], [
-        ...prevTodos,
-        optimisticTodo,
-      ]);
-
+      
       setInputValue("");
       return { prevTodos };
     },
@@ -73,10 +64,17 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
       queryClient.setQueryData(["todos"], context?.prevTodos);
       toast.error("Failed to add todo");
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData<Todo[]>(["todos"], (old) =>
         old?.map((todo) => (todo.id === data.id ? data : todo)) || []
-      );
+    );
+      await queryClient.cancelQueries({ queryKey: ["todos"] });
+
+      const prevTodos = queryClient.getQueryData<Todo[]>(["todos"]) || [];
+    queryClient.setQueryData<Todo[]>(["todos"], [
+      ...prevTodos,
+      data,
+    ]);
       toast.success("Todo added successfully");
     },
   });
@@ -108,10 +106,17 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
       queryClient.setQueryData(["todos"], context?.prevTodos);
       toast.error("Failed to update todo");
     },
-    onSuccess: () => {
+    onSuccess: async (data) => {
+      await queryClient.cancelQueries({ queryKey: ["todos"] });
+
+      const prevTodos = queryClient.getQueryData<Todo[]>(["todos"]);
+      queryClient.setQueryData<Todo[]>(["todos"], (old) =>
+        old?.map((t) => (t.id === data.id ? data : t)) || []
+      );
       toast.success("Todo updated successfully");
       setEditingId(null);
       setEditingText("");
+      return { prevTodos }
     },
   });
 
@@ -165,7 +170,7 @@ export default function TodoApp({ todos }: { todos: Todo[] }) {
 
   /** 🔹 UI (unchanged except todosData instead of todos) */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
+    <div className="min-h-dvh h-full bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
       <div className="max-w-2xl mx-auto pt-8">
         {/* header */}
         <div className="text-center mb-8">

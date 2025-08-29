@@ -21,7 +21,6 @@ export async function getServerSideProps() {
     const url = String(process.env.NEXT_PUBLIC_URL)
     const res = await fetch(`${url}/api/todos`);
     if (!res.ok) {
-      toast.error("Connection Failed Try again")
       throw new Error("Failed to fetch todos");
     }
     const todos = await res.json();
